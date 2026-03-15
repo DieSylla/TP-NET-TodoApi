@@ -8,28 +8,47 @@ Seul un **admin** peut ajouter/modifier/supprimer un Todo. Tous les utilisateurs
 - Docker Desktop
 - .NET 10.0 SDK (pour développement local)
 
-## Instructions d'exécution
-### 1. Exécution locale
+```markdown
+
+## Exécution
+
+### 1. Lancement local
 ```bash
 dotnet run
+```
 
-####L’API est accessible sur : https://localhost:7188/swagger
-### Avec Docker 
+### 2. Avec Docker
 ```bash
 docker build -t todoapi .
 docker run -d -p 8080:8080 --name todoapi todoapi
-L’API est accessible sur : http://localhost:8080/swagger
-3. Tests de sécurité (JWT + Rôles)
-Login :
+```
 
-POST /api/Auth/login
+### 3. Tests d’authentification (Postman)
 
-Utilisateurs :
+**Login Admin**
+```bash
+POST http://localhost:8080/api/auth/login
+```
+```json
+{
+  "email": "admin@example.com",
+  "password": "AdminPass123!"
+}
+```
 
-Admin : { "username": "admin", "password": "password123" } → peut ajouter, modifier, supprimer
-User : { "username": "user", "password": "user123" } → lecture seulement
+**Login User**
+```bash
+POST http://localhost:8080/api/auth/login
+```
+```json
+{
+  "email": "user@test.com",
+  "password": "Pass123!"
+}
+```
 
-Règles appliquées  :
+### 4. Règles de sécurité appliquées
+- `GET /api/todos` → accessible à tout utilisateur identifié  
+- `POST / PUT / DELETE /api/todos` → uniquement rôle **admin**
 
-GET /api/Todos → accessible à tout utilisateur identifié
-POST / PUT / DELETE → seul rôle "admin"
+---
